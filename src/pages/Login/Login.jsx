@@ -1,11 +1,17 @@
 import { useState } from "react";
 import { TextField, Button, Box, Typography, Paper } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setLogin } from "../../store/userSlice";
 
 const Login = () => {
   const [username, setUsername] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogin = () => {
-    console.log("Вхід під іменем:", username);
+    dispatch(setLogin(username));
+    navigate("/rooms");
   };
 
   return (
