@@ -13,11 +13,8 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Login />}></Route>
         <Route path="/rooms" element={<Rooms />}></Route>
-        <Route path="/chat" element={<Chat />}></Route>
+        <Route path="/chat/:roomId" element={<Chat />}></Route>
       </Routes>
-      {/* <Login /> */}
-      {/* <Rooms /> */}
-      {/* <Chat /> */}
     </ThemeProvider>
   );
 };

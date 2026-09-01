@@ -1,18 +1,33 @@
-import { useState } from "react";
 import { TextField, Button, Box, Typography, Paper } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLogin } from "../../store/userSlice";
+import { useFormik } from "formik";
 
 const Login = () => {
-  const [username, setUsername] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    dispatch(setLogin(username));
-    navigate("/rooms");
-  };
+  const formik = useFormik({
+    initialValues: {
+      username: "",
+    },
+
+    validate: (values) => {
+      const errors = {};
+      if (!values.username) {
+        errors.username = "Enter the name";
+      } else if (values.username.trim().length < 3) {
+        errors.username = "At least 3 symbols";
+      }
+      return errors;
+    },
+
+    onSubmit: (values) => {
+      dispatch(setLogin(values.username));
+      navigate("/rooms");
+    },
+  });
 
   return (
     <Box
@@ -38,16 +53,26 @@ const Login = () => {
           Join Chat
         </Typography>
 
-        <TextField
-          label="Name"
-          variant="outlined"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
+        <form
+          onSubmit={formik.handleSubmit}
+          style={{ display: "flex", flexDirection: "column", gap: "24px" }}
+        >
+          <TextField
+            id="username"
+            name="username"
+            label="Name"
+            variant="outlined"
+            value={formik.values.username}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.username && Boolean(formik.errors.username)}
+            helperText={formik.touched.username && formik.errors.username}
+          />
 
-        <Button variant="contained" onClick={handleLogin} size="large">
-          JOIN CHAT
-        </Button>
+          <Button type="submit" variant="contained" size="large">
+            JOIN CHAT
+          </Button>
+        </form>
       </Paper>
     </Box>
   );

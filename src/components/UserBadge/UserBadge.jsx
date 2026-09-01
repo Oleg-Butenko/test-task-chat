@@ -7,9 +7,7 @@ const UserBadge = () => {
   if (!currentLogin) return null;
 
   return (
-    <Box
-    // sx={{ position: "absolute" }}
-    >
+    <Box>
       <Chip label={currentLogin} color="primary" variant="outlined" />
     </Box>
   );

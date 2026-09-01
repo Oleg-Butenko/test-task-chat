@@ -6,18 +6,29 @@ import {
   List,
   ListItemText,
   ListItemButton,
+  TextField,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import UserBadge from "../../components/UserBadge/UserBadge";
-
-const mockRooms = ["General", "Informal", "Work"];
+import { useState } from "react";
 
 const Rooms = () => {
-  const navigate = useNavigate();
+  const [newRoomName, setNewRoomName] = useState("");
 
-  const handleNavigate = () => {
-    navigate("/chat");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const messagesByRoom = useSelector((state) => state.chat.messagesByRoom);
+  const rooms = Object.keys(messagesByRoom);
+
+  const handleCreateRoom = () => {
+    if (newRoomName.trim() !== "") {
+      dispatch({ type: "SERVER_CREATE_ROOM", payload: newRoomName.trim() });
+      setNewRoomName("");
+    }
   };
+
   return (
     <Box
       sx={{
@@ -49,12 +60,25 @@ const Rooms = () => {
           <UserBadge />
         </Box>
 
-        <Button variant="contained" fullWidth size="large">
+        <TextField
+          fullWidth
+          size="small"
+          placeholder="Enter room name..."
+          value={newRoomName}
+          onChange={(e) => setNewRoomName(e.target.value)}
+        />
+
+        <Button
+          variant="contained"
+          fullWidth
+          size="large"
+          onClick={handleCreateRoom}
+        >
           NEW ROOM
         </Button>
 
         <List>
-          {mockRooms.map((room) => (
+          {rooms.map((room) => (
             <ListItemButton
               sx={{
                 border: "1px solid #e0e0e0",
@@ -62,7 +86,7 @@ const Rooms = () => {
                 mb: 1,
               }}
               key={room}
-              onClick={handleNavigate}
+              onClick={() => navigate(`/chat/${room}`)}
             >
               <ListItemText primary={room} />
             </ListItemButton>
